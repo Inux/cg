@@ -1,5 +1,7 @@
 precision mediump float;
 
-void main() {
-    // to complete
+uniform vec4 uColor;
+
+void main( void ) {
+    gl_FragColor = uColor;
 }
