@@ -53,3 +53,6 @@ Idee:
 * Der Fehler wird anhand der folgenden Gewichte auf     die noch nicht besuchten Pixel verteilt
 
 ![](2018-09-27-17-04-42.png)
+
+Übung:
+![](2018-09-27-17-11-56.png)
