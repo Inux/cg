@@ -105,6 +105,8 @@ function drawRect(){
     gl.uniform4f(ctx.uColorId, red, green, blue, 1.0);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.buffer);
+
+    //Amount of Elements, Type, Next value in Bytes(e.g 24 when 4 floats), Offset in Bytes
     gl.vertexAttribPointer(ctx.aVertexPositionId, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(ctx.aVertexPositionId);
 
