@@ -14,15 +14,16 @@ var gl;
 var ctx = {
     shaderProgram: -1,
     aVertexPositionId: -1,
-    aVertextTextureCoordId: -1,
+    aVertexColorId: -1,
+    aVertexTextureCoordId: -1,
     uSampler2DId: -1
 };
 
-// keep texture parameters in an object so we can mix textures and objects
-var lennaTxt = {
-    textureObj: {}
+var rectangleObject = {
+    buffer: -1,
+    colorBuffer: -1,
+    textureBuffer: -1
 };
-
 
 /**
  * Startup function to be called when the body is loaded
@@ -32,7 +33,7 @@ function startup() {
     var canvas = document.getElementById("myCanvas");
     gl = createGLContext(canvas);
     initGL();
-    draw();
+    loadTexture();
 }
 
 /**
@@ -44,11 +45,96 @@ function initGL() {
     setUpAttributesAndUniforms();
     setUpBuffers();
     gl.clearColor(1, 0, 0, 1);
-
-    // add more necessary commands here
-
-    loadTexture();
 }
+
+/**
+ * Setup all the attribute and uniform variables
+ */
+function setUpAttributesAndUniforms() {
+    "use strict";
+    ctx.aVertexPositionId = gl.getAttribLocation(ctx.shaderProgram, "aVertexPosition");
+    ctx.aVertexColorId = gl.getAttribLocation(ctx.shaderProgram, "aVertexColor");
+    ctx.aVertexTextureCoordId = gl.getAttribLocation(ctx.shaderProgram, "aVertexTextureCoord");
+    ctx.uSampler2DId = gl.getUniformLocation(ctx.shaderProgram, "uSampler")
+}
+
+/**
+ * Setup the buffers to use. If more objects are needed this should be split in a file per object.
+ */
+function setUpBuffers() {
+    "use strict";
+    rectangleObject.buffer = gl.createBuffer();
+
+    var vertices = [
+        -0.5, -0.5,
+        -0.5, 0.5,
+        0.5, -0.5,
+        0.5, 0.5
+    ];
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+
+    rectangleObject.colorBuffer = gl.createBuffer();
+
+    var colors = [
+        0, 0, 1, 1,
+        0, 0.5, 0.5, 1,
+        0.5, 0, 0, 1,
+        0.5, 0.5, 0, 1
+    ];
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.colorBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+
+
+    rectangleObject.textureBuffer = gl.createBuffer();
+
+    // create the texture coordinates for the object
+    var textureCoord = [
+        0.0, 0.0,
+        0.0, 1.0,
+        1.0, 0.0,
+        1.0, 1.0
+    ];
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.textureBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoord), gl.STATIC_DRAW);
+
+}
+
+/**
+ * Draw the scene.
+ */
+function draw() {
+    "use strict";
+    console.log("Drawing");
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.buffer);
+    gl.vertexAttribPointer(ctx.aVertexPositionId, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(ctx.aVertexPositionId);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.colorBuffer);
+    gl.vertexAttribPointer(ctx.aVertexColorId, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(ctx.aVertexColorId);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, lennaTxt.textureObj);
+    gl.uniform1i(ctx.uSampler2DId, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.textureBuffer);
+    gl.vertexAttribPointer(ctx.aVertexTextureCoordId, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(ctx.aVertexTextureCoordId);
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+}
+
+// keep texture parameters in an object so we can mix textures and objects
+var lennaTxt = {
+    textureObj: {}
+};
 
 /**
  * Initialize a texture from an image
@@ -65,6 +151,7 @@ function initTexture(image, textureObject) {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
     gl.generateMipmap(gl.TEXTURE_2D);
+
     // turn texture off again
     gl.bindTexture(gl.TEXTURE_2D, null);
 }
@@ -74,79 +161,16 @@ function initTexture(image, textureObject) {
  */
 function loadTexture() {
     var image = new Image();
+
     // create a texture object
     lennaTxt.textureObj = gl.createTexture();
+
     image.onload = function () {
         initTexture(image, lennaTxt.textureObj);
         // make sure there is a redraw after the loading of the texture
         draw();
     };
+
     // setting the src will trigger onload
-    image.src = " lena512.png";
-}
-
-/**
- * Setup all the attribute and uniform variables
- */
-function setUpAttributesAndUniforms() {
-    "use strict";
-    //attributes
-    ctx.aVertexPositionId = gl.getAttribLocation(ctx.shaderProgram, "aVertexPosition");
-    ctx.aVertextTextureCoordId = gl.getAttribLocation(ctx.shaderProgram, "aVertextTextureCoord");
-    ctx.uSampler2DId = gl.getUniformLocation(ctx.shaderProgram, "uSampler");
-}
-
-var rectangleObject = {
-    buffer: -1
-}
-
-/**
- * Setup the buffers to use. If more objects are needed this should be split in a file per object.
- */
-function setUpBuffers() {
-    "use strict";
-    rectangleObject.buffer = gl.createBuffer();
-    var vertices = [
-        -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5
-    ]
-    gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-}
-
-/**
- * Draw the scene.
- */
-function draw() {
-    "use strict";
-    //gl.clear(gl.COLOR_BUFFER_BIT);
-
-    var vertices = [
-        -1.0, -1.0
-        -1.0, 1.0,
-        1.0, 1.0,
-        1.0, -1.0
-    ];
-    var textureCoord = [
-        0, 0,
-        0, 1,
-        1, 1,
-        1, 0
-    ];
-
-    rectangleObject.buffer = gl.createBuffer();
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    //Amount of Elements, Type, Next value in Bytes(e.g 24 when 4 floats), Offset in Bytes
-    gl.bindBuffer(gl.ARRAY_BUFFER , rectangleObject.buffer);
-    gl.vertexAttribPointer(ctx.aVertexPositionId, 2, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(ctx.aVertexPositionId);
-
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D , lennaTxt.textureObj);
-    gl.uniform1i(ctx.uSampler2DId , 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER , rectangleObject.textureBuffer);
-    gl.vertexAttribPointer(ctx.aVertextTextureCoordId, 2, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(ctx.aVertextTextureCoordId);
-
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    image.src = "lena512.png";
 }

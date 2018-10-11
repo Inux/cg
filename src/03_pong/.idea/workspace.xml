@@ -1,37 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f043da17-4a15-484c-ab95-b89dcf47b9a2" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../exercise01/.idea/dbnavigator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/.idea/jsLibraryMappings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/.idea/webgl_start.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/Exercise1.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/Exercise1.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/FragmentShader.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/VertexShader.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/gl-matrix.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/shaderUtils.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise01/webgl-debug.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/.idea/dbnavigator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/.idea/jsLibraryMappings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/.idea/webgl_start.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/Exercise2.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/Exercise2.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/FragmentShader.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/VertexShader.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/gl-matrix.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/lena512.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/shaderUtils.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exercise02/webgl-debug.js" beforeDir="false" />
-    </list>
+    <list default="true" id="f043da17-4a15-484c-ab95-b89dcf47b9a2" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -45,6 +15,7 @@
     <session id="-1787394331">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+          <entry key="project.closed" value="1" />
           <entry key="project.open.time.6" value="1" />
           <entry key="project.opened" value="1" />
         </counts>
@@ -248,16 +219,15 @@
       <workItem from="1520856245505" duration="479000" />
       <workItem from="1520861617777" duration="11000" />
       <workItem from="1539255473333" duration="264000" />
-      <workItem from="1539267567269" duration="5356000" />
+      <workItem from="1539267567269" duration="5576000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6700000" />
+    <option name="totallyTimeSpent" value="6920000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="977" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21398433" />
       <window_info id="Structure" order="1" weight="0.25" />

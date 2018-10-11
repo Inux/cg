@@ -1,7 +1,8 @@
 attribute vec2 aVertexTextureCoord;
 attribute vec2 aVertexPosition;
+attribute vec4 aVertexColor;
 
-varying vec2 vColor;
+varying vec4 vColor;
 varying vec2 vTextureCoord;
 
 void main(void)
