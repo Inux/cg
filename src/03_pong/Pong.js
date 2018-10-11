@@ -6,15 +6,22 @@
 
 // Register function to call after document has loaded
 window.onload = startup;
+window.requestAnimationFrame(drawAnimated);
 
 // the gl object is saved globally
 var gl;
 
 var model = {
+    lastDraw: 0,
     width: -1,
     height: -1,
+    halfWidth: -1,
+    halfHeight: -1,
     racketWidth: 10,
     racketHeight: 100,
+    racketHeightHalf: -1,
+    maxY: -1,
+    minY: -1,
     field: {
         buffer: -1,
         vertices: [],
@@ -33,6 +40,10 @@ var model = {
         matrix: mat3.create(),
         y: 0
     },
+    logic: {
+        interval: 60,
+        brake: true,
+    }
 }
 
 function initModel(canvas) {
@@ -40,6 +51,12 @@ function initModel(canvas) {
     model.height = canvas.height;
     model.halfHeight = model.height/2;
     model.halfWidth = model.width/2;
+
+
+    model.racketHeightHalf = model.racketHeight/2;
+
+    model.maxY = model.halfHeight-model.racketHeightHalf;
+    model.minY = -model.halfHeight+model.racketHeightHalf;
 
     model.field.vertices = [
         -2, -model.halfHeight,
@@ -74,6 +91,39 @@ var ctx = {
     uProjectionMatId: -1,
     uModelMatId: -1,
 };
+
+/**
+ * Get Y from matrix
+ * @param matrix
+ * @returns {y}
+ */
+function getY(matrix) {
+    return matrix[7]; //http://glmatrix.net/docs/mat3.js.html
+}
+
+/**
+ * Translate Players matrix
+ * @param player
+ */
+function translatePlayer(player) {
+    mat3.translate(player.matrix, player.matrix, [0, player.y]);
+}
+
+/**
+ * Set Max Players translation
+ * @param player
+ */
+function setMax(player) {
+    player.matrix[7] = model.maxY;
+}
+
+/**
+ * Set Min Players translation
+ * @param player
+ */
+function setMin(player) {
+    player.matrix[7] = model.minY;
+}
 
 /**
  * Startup function to be called when the body is loaded
@@ -167,6 +217,26 @@ function drawPlayer1() {
     gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
 }
 
+function computePlayer1() {
+    if(isDown(key.UP) && !isDown(key.DOWN)) {
+        if(getY(model.player1.matrix) < model.maxY) {
+            model.player1.y++;
+            translatePlayer(model.player1);
+        } else {
+            setMax(model.player1);
+        }
+    } else if(isDown(key.DOWN) && !isDown(key.UP)) {
+        if(getY(model.player1.matrix) > model.minY) {
+            model.player1.y--;
+            translatePlayer(model.player1);
+        } else {
+            setMin(model.player1);
+        }
+    } else if (model.logic.brake) {
+        model.player1.y = 0;
+    }
+}
+
 function drawPlayer2() {
     "use strict";
     gl.bindBuffer(gl.ARRAY_BUFFER, model.player2.buffer);
@@ -183,12 +253,24 @@ function drawPlayer2() {
  */
 function draw() {
     "use strict";
-    console.log("Drawing");
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     drawField();
     drawPlayer1();
     drawPlayer2();
+}
+
+function drawAnimated(timeStamp) {
+    if(model.lastDraw == 0 || (timeStamp - model.lastDraw) > model.logic.interval) {
+        model.lastDraw = timeStamp;
+
+        computePlayer1();
+
+        draw();
+        // request the next frame
+    }
+
+    window.requestAnimationFrame(drawAnimated);
 }
 
 // Key Handling
@@ -213,31 +295,4 @@ function onKeyup(event) {
     delete key._pressed[event.keyCode];
 }
 
-function oldDraw() {
-    "use strict";
-    console.log("Drawing");
-    gl.clear(gl.COLOR_BUFFER_BIT);
 
-    drawField();
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, rectangleObject.buffer);
-    gl.vertexAttribPointer(ctx.aVertexPositionId, 2, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(ctx.aVertexPositionId);
-
-    //First
-    var modelMat = mat3.create();
-    mat3.fromScaling(modelMat, [model.racketWidth, model.racketHeight]);
-    mat3.translate(modelMat, modelMat, [39, 0]);
-    gl.uniformMatrix3fv(ctx.uModelMatId, false, modelMat);
-
-    gl.uniform4f(ctx.uColorId, 1, 1, 1, 1);
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
-
-    //Second
-    mat3.fromScaling(modelMat, [model.racketWidth, model.racketHeight]);
-    mat3.translate(modelMat, modelMat, [-39, 0]);
-    gl.uniformMatrix3fv(ctx.uModelMatId, false, modelMat);
-
-    gl.uniform4f(ctx.uColorId, 0, 1, 0, 1);
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
-}
