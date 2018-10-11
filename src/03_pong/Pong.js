@@ -20,8 +20,12 @@ var model = {
     racketWidth: 10,
     racketHeight: 100,
     racketHeightHalf: -1,
-    maxY: -1,
-    minY: -1,
+    maxYracket: -1,
+    minYracket: -1,
+    maxYball: -1,
+    minYball: -1,
+    maxXball: -1,
+    minXball: -1,
     field: {
         buffer: -1,
         vertices: [],
@@ -32,17 +36,26 @@ var model = {
         buffer: -1,
         vertices: [],
         matrix: mat3.create(),
+        x: 0,
         y: 0
     },
     player2: {
         buffer: -1,
         vertices: [],
         matrix: mat3.create(),
+        x: 0,
         y: 0
     },
+    ball: {
+        ballDia: 10,
+        buffer: -1,
+        vertices: [],
+        matrix: mat3.create(),
+        x: 0,
+        y: 0,
+    },
     logic: {
-        interval: 60,
-        brake: true,
+        interval: 60
     }
 }
 
@@ -55,8 +68,13 @@ function initModel(canvas) {
 
     model.racketHeightHalf = model.racketHeight/2;
 
-    model.maxY = model.halfHeight-model.racketHeightHalf;
-    model.minY = -model.halfHeight+model.racketHeightHalf;
+    model.maxYracket = model.halfHeight-model.racketHeightHalf;
+    model.minYracket = -model.halfHeight+model.racketHeightHalf;
+
+    model.maxYball = model.halfHeight-(model.ball.ballDia/2);
+    model.minYball = -model.halfHeight+(model.ball.ballDia/2);
+    model.maxXball = model.halfWidth-(model.ball.ballDia/2);
+    model.minXball = -model.halfWidth+(model.ball.ballDia/2);
 
     model.field.vertices = [
         -2, -model.halfHeight,
@@ -79,6 +97,16 @@ function initModel(canvas) {
         model.halfWidth-model.racketWidth, model.racketHeight/2,
     ]
 
+    model.ball.vertices = [
+        -model.ball.ballDia, -model.ball.ballDia,
+        +model.ball.ballDia, -model.ball.ballDia,
+        +model.ball.ballDia, model.ball.ballDia,
+        -model.ball.ballDia, model.ball.ballDia,
+    ]
+
+    model.ball.x = Math.floor((Math.random() * 15) + 5);
+    model.ball.y = Math.floor((Math.random() * 15) + 5);
+
     console.log("Model: ");
     console.log(model);
 }
@@ -93,7 +121,7 @@ var ctx = {
 };
 
 /**
- * Get Y from matrix
+ * Get y from matrix
  * @param matrix
  * @returns {y}
  */
@@ -102,11 +130,20 @@ function getY(matrix) {
 }
 
 /**
- * Translate Players matrix
- * @param player
+ * Get x from matrix
+ * @param matrix
+ * @returns {x}
  */
-function translatePlayer(player) {
-    mat3.translate(player.matrix, player.matrix, [0, player.y]);
+function getX(matrix) {
+    return matrix[6]; //http://glmatrix.net/docs/mat3.js.html
+}
+
+/**
+ * Translate Objects matrix
+ * @param object
+ */
+function translateObject(obj) {
+    mat3.translate(obj.matrix, obj.matrix, [obj.x, obj.y]);
 }
 
 /**
@@ -114,7 +151,8 @@ function translatePlayer(player) {
  * @param player
  */
 function setMax(player) {
-    player.matrix[7] = model.maxY;
+    player.matrix[7] = model.maxYracket;
+    player.y = 0;
 }
 
 /**
@@ -122,7 +160,41 @@ function setMax(player) {
  * @param player
  */
 function setMin(player) {
-    player.matrix[7] = model.minY;
+    player.matrix[7] = model.minYracket;
+    player.y = 0;
+}
+
+/**
+ * Check if Player is in the field
+ * @param player
+ */
+function checkPlayer(player) {
+   if(getY(player.matrix) >= model.maxYracket) {
+       setMax(player);
+   }
+   else if (getY(player.matrix) <= model.minYracket) {
+       setMin(player);
+   }
+}
+
+/**
+ * Check if Ball is in the field
+ * @param player
+ */
+function checkBall(ball) {
+    if(getY(ball.matrix) >= model.maxYball) {
+        ball.y *= -1;
+    }
+    else if (getY(ball.matrix) <= model.minYball) {
+        ball.y *= -1;
+    }
+
+    if(getX(ball.matrix) >= model.maxXball) {
+        ball.x *= -1;
+    }
+    else if (getX(ball.matrix) <= model.minXball) {
+        ball.x *= -1;
+    }
 }
 
 /**
@@ -190,6 +262,11 @@ function setUpBuffers(){
     model.player2.buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, model.player2.buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.player2.vertices), gl.STATIC_DRAW);
+
+    //Ball
+    model.ball.buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, model.ball.buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.ball.vertices), gl.STATIC_DRAW);
 }
 
 /**
@@ -219,21 +296,13 @@ function drawPlayer1() {
 
 function computePlayer1() {
     if(isDown(key.UP) && !isDown(key.DOWN)) {
-        if(getY(model.player1.matrix) < model.maxY) {
-            model.player1.y++;
-            translatePlayer(model.player1);
-        } else {
-            setMax(model.player1);
-        }
+        model.player1.y++;
+        translateObject(model.player1);
+        checkPlayer(model.player1);
     } else if(isDown(key.DOWN) && !isDown(key.UP)) {
-        if(getY(model.player1.matrix) > model.minY) {
-            model.player1.y--;
-            translatePlayer(model.player1);
-        } else {
-            setMin(model.player1);
-        }
-    } else if (model.logic.brake) {
-        model.player1.y = 0;
+        model.player1.y--;
+        translateObject(model.player1);
+        checkPlayer(model.player1);
     }
 }
 
@@ -248,6 +317,22 @@ function drawPlayer2() {
     gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
 }
 
+function drawBall() {
+    "use strict";
+    gl.bindBuffer(gl.ARRAY_BUFFER, model.ball.buffer);
+    gl.vertexAttribPointer(ctx.aVertexPositionId, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(ctx.aVertexPositionId);
+
+    gl.uniformMatrix3fv(ctx.uModelMatId, false, model.ball.matrix);
+    gl.uniform4f(ctx.uColorId, 0, 0, 1, 1);
+    gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
+}
+
+function computeBall() {
+    checkBall(model.ball);
+    translateObject(model.ball);
+}
+
 /**
  * Draw the scene.
  */
@@ -258,12 +343,14 @@ function draw() {
     drawField();
     drawPlayer1();
     drawPlayer2();
+    drawBall();
 }
 
 function drawAnimated(timeStamp) {
     if(model.lastDraw == 0 || (timeStamp - model.lastDraw) > model.logic.interval) {
         model.lastDraw = timeStamp;
 
+        computeBall();
         computePlayer1();
 
         draw();
@@ -292,7 +379,7 @@ function onKeydown(event) {
 }
 
 function onKeyup(event) {
-    delete key._pressed[event.keyCode];
+    key._pressed[event.keyCode] = false;
 }
 
 
