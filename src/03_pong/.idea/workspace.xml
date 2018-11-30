@@ -15,11 +15,11 @@
     <session id="-1787394331">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="3" />
+          <entry key="project.closed" value="4" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.5" value="1" />
+          <entry key="project.open.time.5" value="2" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.opened" value="3" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -79,8 +79,9 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="y" value="24" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="88" />
+    <option name="y" value="62" />
     <option name="width" value="1680" />
     <option name="height" value="977" />
   </component>
@@ -92,6 +93,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -103,7 +105,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -178,14 +179,15 @@
       <workItem from="1539267567269" duration="5576000" />
       <workItem from="1539284302756" duration="12172000" />
       <workItem from="1541694879542" duration="499000" />
+      <workItem from="1543588654194" duration="454000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19591000" />
+    <option name="totallyTimeSpent" value="20045000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="24" width="1680" height="977" extended-state="6" />
+    <frame x="0" y="23" width="1680" height="977" extended-state="6" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21398433" />
       <window_info id="Structure" order="1" weight="0.25" />
