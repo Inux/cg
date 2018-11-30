@@ -68,7 +68,7 @@ function startup() {
     var canvas = document.getElementById("myCanvas");
     gl = createGLContext(canvas);
     initGL();
-    loadTexture();
+    //loadTexture();
     window.requestAnimationFrame (drawAnimated);
 }
 
@@ -91,7 +91,6 @@ function initGL() {
  * @param textureObject WebGL Texture Object
  */
 function initTexture(image, textureObject) {
-    // create a new texture
     gl.bindTexture(gl.TEXTURE_2D, textureObject);
 
     // set parameters for the texture
@@ -112,12 +111,18 @@ function loadTexture() {
     var image = new Image();
     // create a texture object
     textures.textureObject0 = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, textures.textureObject0);
+
+    // Fill the texture with a 1x1 blue pixel.
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+        new Uint8Array([0, 0, 255, 255]));
     image.onload = function() {
         console.log("Image loaded");
         initTexture(image, textures.textureObject0);
     };
     // setting the src will trigger onload
     image.src = "lena512.png";
+
 }
 
 function defineObjects() {
@@ -163,7 +168,7 @@ function draw() {
     var modelViewMatrix = mat4.create();
     var viewMatrix = mat4.create();
     var projectionMatrix = mat4.create();
-    var textureMatrix = mat3.create();
+    //var textureMatrix = mat3.create();
     var normalMatrix = mat3.create();
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -179,16 +184,14 @@ function draw() {
 
 
     // enable the texture mapping
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, textures.textureObject0);
-    gl.uniform1i(ctx.uSamplerId, 0);
-    gl.uniformMatrix3fv(ctx.uTextureMatrixId, false, textureMatrix);
+    //gl.activeTexture(gl.TEXTURE0);
+    //gl.bindTexture(gl.TEXTURE_2D, textures.textureObject0);
+    //gl.uniform1i(ctx.uSamplerId, 0);
+    //gl.uniformMatrix3fv(ctx.uTextureMatrixId, false, textureMatrix);
 
     // tell the fragment shader to use the texture
-    gl.uniform1i(ctx.uEnableTextureId, 1);
-
-    gl.uniformMatrix3fv(ctx.uTextureMatrixId, false, textureMatrix);
-
+    //gl.uniform1i(ctx.uEnableTextureId, 1);
+    //gl.uniformMatrix3fv(ctx.uTextureMatrixId, false, textureMatrix);
 
     // set the light
     gl.uniform1i(ctx.uEnableLightingId, 1);
@@ -206,8 +209,7 @@ function draw() {
     gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
     //drawingObjects.wiredCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId);
     drawingObjects.solidCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId);
-
-
+    
     // translate and rotate objects
     mat4.translate(modelViewMatrix, viewMatrix, [-1.0, 0, 0]);
     mat4.rotate(modelViewMatrix, modelViewMatrix, scene.angle, [0, 1, 0]);

@@ -12,11 +12,14 @@ varying vec2 vTextureCoord;
 varying vec3 vNormalEye;
 varying vec3 vVertexPositionEye3;
 
+varying vec3 vLightPositionEye3;
+
 void main() {
     // calculate the vertex position in eye Coordinate
     vec4 vertexPositionEye4 = uModelViewMatrix * vec4(aVertexPosition, 1.0);
     vVertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
 
+    //vLightPositionEye3 = vec3( uModelViewMatrix * vec4(aVertexPosition, 0.0) );
      // calculate the normal vector in eye coordinates
     vNormalEye = normalize(uNormalMatrix * aVertexNormal);
 
