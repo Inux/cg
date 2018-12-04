@@ -36,7 +36,7 @@ void main() {
 
         // diffuse lighting
         float cosAngle = clamp(dot(normal, lightDirectionEye), 0.0, 1.0);
-        vec3 diffuseColor = cosAngle * baseColor.rgb;
+        vec3 diffuseColor = cosAngle * baseColor.rgb * uLightColor;
 
         // specular lighting
         vec3 specularColor = vec3(0, 0, 0);
