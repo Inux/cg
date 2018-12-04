@@ -40,13 +40,13 @@ var textures = {
 
 // parameters that define the scene
 var scene = {
-    eyePosition: [1, 1, 4],
+    eyePosition: [0, 3, -4],
     lookAtPosition: [0, 0, 0],
     upVector: [0, 1, 0],
     nearPlane: 0.1,
     farPlane: 30.0,
     fov: 40,
-    lightPosition: [0, -3, 0],
+    lightPosition: [-20, 20, 0],
     lightColor: [1, 1, 1],
     rotateObjects: true,
     angle: 0,
@@ -69,7 +69,6 @@ function startup() {
     gl = createGLContext(canvas);
     initGL();
     loadTexture();
-
     window.requestAnimationFrame (drawAnimated);
 }
 
@@ -92,6 +91,7 @@ function initGL() {
  * @param textureObject WebGL Texture Object
  */
 function initTexture(image, textureObject) {
+    // create a new texture
     gl.bindTexture(gl.TEXTURE_2D, textureObject);
 
     // set parameters for the texture
@@ -112,18 +112,12 @@ function loadTexture() {
     var image = new Image();
     // create a texture object
     textures.textureObject0 = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, textures.textureObject0);
-
-    // Fill the texture with a 1x1 blue pixel.
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
-        new Uint8Array([0, 0, 255, 255]));
     image.onload = function() {
         console.log("Image loaded");
         initTexture(image, textures.textureObject0);
     };
     // setting the src will trigger onload
     image.src = "lena512.png";
-
 }
 
 function defineObjects() {
@@ -186,10 +180,13 @@ function draw() {
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, textures.textureObject0);
     gl.uniform1i(ctx.uSamplerId, 0);
+    gl.uniformMatrix3fv(ctx.uTextureMatrixId, false, textureMatrix);
 
     // tell the fragment shader to use the texture
     gl.uniform1i(ctx.uEnableTextureId, 1);
+
     gl.uniformMatrix3fv(ctx.uTextureMatrixId, false, textureMatrix);
+
 
     // set the light
     gl.uniform1i(ctx.uEnableLightingId, 1);
@@ -205,24 +202,26 @@ function draw() {
     gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
     mat3.normalFromMat4(normalMatrix, modelViewMatrix);
     gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
-    drawingObjects.solidCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, ctx.aVertexTextureCoordId, textures.textureObject0);
-    
+    //drawingObjects.wiredCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId);
+    drawingObjects.solidCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId);
+
+
     // translate and rotate objects
     mat4.translate(modelViewMatrix, viewMatrix, [-1.0, 0, 0]);
     mat4.rotate(modelViewMatrix, modelViewMatrix, scene.angle, [0, 1, 0]);
     gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
     mat3.normalFromMat4(normalMatrix, modelViewMatrix);
     gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
-    drawingObjects.solidCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, ctx.aVertexTextureCoordId, textures.textureObject0);
+    drawingObjects.solidCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId);
 
     // draw sphere
-    mat4.translate(modelViewMatrix, viewMatrix, [0.0, 0.0, -2.0]);
-    mat4.scale(modelViewMatrix, modelViewMatrix, [0.7, 0.7, 0.7]);
+    mat4.translate(modelViewMatrix, viewMatrix, [0.0, 0.0, -1.0]);
     mat4.rotate(modelViewMatrix, modelViewMatrix, scene.angle, [0, 1, 0]);
+    mat4.scale(modelViewMatrix, modelViewMatrix, [0.5, 0.5, 0.5]);
+    gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
     mat3.normalFromMat4(normalMatrix, modelViewMatrix);
     gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
-    gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
-    drawingObjects.solidSphere.drawWithColor(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, [1, 0.8, 0]);
+    drawingObjects.solidSphere.drawWithColor(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, [1, 0, 0]);
 }
 
 var first = true;
