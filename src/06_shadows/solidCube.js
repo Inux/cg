@@ -20,45 +20,38 @@ function SolidCube(gl, backColor, frontColor, rightColor, leftColor, topColor, b
     function defineVertices(gl) {
         // define the vertices of the cube
         var vertices = [
-            // back
-            -0.5,-0.5,-0.5, //v0
-            0.5,-0.5,-0.5,  //v1
-            -0.5,0.5,-0.5,  //v2
-            0.5,0.5,-0.5,   //v3
-
-            // left
-            -0.5,-0.5,-0.5, //v4
-            -0.5,0.5,-0.5,  //v5
-            -0.5,-0.5,0.5,  //v6
-            -0.5,0.5,0.5,   //v7
-
-            // front
-            -0.5,-0.5,0.5,  //v8
-            -0.5,0.5,0.5,   //v9
-            0.5,-0.5,0.5,   //v10
-            0.5,0.5,0.5,    //v11
-
-            // right
-            0.5,-0.5,-0.5,  //v12
-            0.5,0.5,-0.5,   //v13
-            0.5,-0.5,0.5,   //v14
-            0.5,0.5,0.5,    //v15
-
-            // top
-            0.5,0.5,-0.5,   //v16
-            -0.5,0.5,-0.5,  //v17
-            0.5,0.5,0.5,    //v18
-            -0.5,0.5,0.5,   //v19
-
-            // bottom
-            -0.5,-0.5,-0.5, //v20
-            0.5,-0.5,-0.5,  //v21
-            -0.5,-0.5,0.5,  //v22
-            0.5,-0.5,0.5    //v23
-
-
+                                  // back
+            -0.5, -0.5, -0.5,     // v0
+            0.5, -0.5, -0.5,      // v1
+            0.5, 0.5, -0.5,       // v2
+            -0.5, 0.5, -0.5,      // v3
+                                  // front
+            -0.5, -0.5, 0.5,      // v4
+            0.5, -0.5, 0.5,       // v5
+            0.5, 0.5, 0.5,        // v6
+            -0.5, 0.5, 0.5,       // v7
+                                  // right
+            0.5, -0.5, -0.5,      // v8 = v1
+            0.5, 0.5, -0.5,       // v9 = v2
+            0.5, 0.5, 0.5,        // v10 = v6
+            0.5, -0.5, 0.5,       // v11 = v5
+                                  // left
+            -0.5, -0.5, -0.5,     // v12 = v0
+            -0.5, 0.5, -0.5,      // v13 = v3
+            -0.5, 0.5, 0.5,       // v14 = v7
+            -0.5, -0.5, 0.5,      // v15 = v4
+                                  // top
+            -0.5, 0.5, -0.5,      // v16 = v3
+            -0.5, 0.5, 0.5,       // v17 = v7
+            0.5, 0.5, 0.5,        // v18 = v6
+            0.5, 0.5, -0.5,       // v19 = v2
+                                  //bottom
+            -0.5, -0.5, -0.5,     // v20 = v0
+            -0.5, -0.5, 0.5,      // v21 = v4
+            0.5, -0.5, 0.5,       // v22 = v5
+            0.5, -0.5, -0.5       // v23 = v1
         ];
-        var buffer  = gl.createBuffer();
+        var buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         return buffer;
@@ -67,29 +60,18 @@ function SolidCube(gl, backColor, frontColor, rightColor, leftColor, topColor, b
     function defineSides(gl) {
         // define the edges for the cube, there are 12 edges in a cube
         var vertexIndices = [
-            //back
-            0,1,2,
-            1,2,3,
-
-            //left
-            4,5,6,
-            5,6,7,
-
-            //front
-            8,9,10,
-            9,10,11,
-
-            //right
-            12,13,14,
-            13,14,15,
-
-            // top
-            16,17,18,
-            17,18,19,
-
-            //bottom
-            20,21,22,
-            21,22,23
+            0, 2, 1, // face 0 (back)
+            2, 0, 3,
+            4, 5, 6, // face 1 (front)
+            4, 6, 7,
+            8, 9, 10, // face 2 (right)
+            10, 11, 8,
+            12, 15, 14, // face 3 (left)
+            14, 13, 12,
+            16, 17, 18, // face 4 (top)
+            18, 19, 16,
+            20, 23, 22, // face 5 (bottom)
+            22, 21, 20
         ];
         var buffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
@@ -100,35 +82,35 @@ function SolidCube(gl, backColor, frontColor, rightColor, leftColor, topColor, b
 
     function defineTexture(gl) {
         var texture = [
-            1,0,
-            0,0,
-            1,1,
-            0,1,
+            1, 0,
+            0, 0,
+            0, 1,
+            1, 1,
 
-            0,0,
-            0,1,
-            1,0,
-            1,1,
+            0, 0,
+            1, 0,
+            1, 1,
+            0, 1,
 
-            0,0,
-            0,1,
-            1,0,
-            1,1,
+            1, 0,
+            1, 1,
+            0, 1,
+            0, 0,
 
-            0,0,
-            0,1,
-            1,0,
-            1,1,
+            0, 0,
+            0, 1,
+            1, 1,
+            1, 0,
 
-            0,0,
-            0,1,
-            1,0,
-            1,1,
+            0, 0,
+            1, 0,
+            1, 1,
+            0, 1,
 
-            0,0,
-            0,1,
-            1,0,
-            1,1
+            1, 0,
+            0, 0,
+            0, 1,
+            1, 1,
         ];
 
         var buffer = gl.createBuffer();
@@ -164,12 +146,12 @@ function SolidCube(gl, backColor, frontColor, rightColor, leftColor, topColor, b
         var bottomNormal = [0.0, -1.0, 0.0];
 
         // make 4 entries, one for each vertex
-        var backSideNormal    = backNormal.concat(backNormal, backNormal, backNormal);
-        var frontSideNormal   = frontNormal.concat(frontNormal, frontNormal, frontNormal);
-        var rightSideNormal   = rightNormal.concat(rightNormal, rightNormal, rightNormal);
-        var leftSideNormal    = leftNormal.concat(leftNormal, leftNormal, leftNormal);
-        var topSideNormal     = topNormal.concat(topNormal, topNormal, topNormal);
-        var bottomSideNormal  = bottomNormal.concat(bottomNormal, bottomNormal, bottomNormal);
+        var backSideNormal = backNormal.concat(backNormal, backNormal, backNormal);
+        var frontSideNormal = frontNormal.concat(frontNormal, frontNormal, frontNormal);
+        var rightSideNormal = rightNormal.concat(rightNormal, rightNormal, rightNormal);
+        var leftSideNormal = leftNormal.concat(leftNormal, leftNormal, leftNormal);
+        var topSideNormal = topNormal.concat(topNormal, topNormal, topNormal);
+        var bottomSideNormal = bottomNormal.concat(bottomNormal, bottomNormal, bottomNormal);
 
         var allSidesNormal = backSideNormal.concat(frontSideNormal, rightSideNormal, leftSideNormal, topSideNormal, bottomSideNormal);
 
@@ -180,8 +162,6 @@ function SolidCube(gl, backColor, frontColor, rightColor, leftColor, topColor, b
     }
 
 
-
-
     return {
         bufferVertices: defineVertices(gl),
         bufferSides: defineSides(gl),
@@ -189,7 +169,7 @@ function SolidCube(gl, backColor, frontColor, rightColor, leftColor, topColor, b
         bufferNormals: defineNormals(gl),
         bufferTextures: defineTexture(gl),
 
-        draw: function(gl, aVertexPositionId, aVertexColorId, aVertexNormalId, aVertexTextureCoordId, textureObj) {
+        draw: function (gl, aVertexPositionId, aVertexColorId, aVertexNormalId, aVertexTextureCoordId, textureObj) {
             // ositionp
             gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferVertices);
             gl.vertexAttribPointer(aVertexPositionId, 3, gl.FLOAT, false, 0, 0);
@@ -214,7 +194,7 @@ function SolidCube(gl, backColor, frontColor, rightColor, leftColor, topColor, b
 
             // bind the element array
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferSides);
-            gl.drawElements(gl.TRIANGLES, 36 ,gl.UNSIGNED_SHORT, 0);
+            gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
 
         }
     }

@@ -182,7 +182,6 @@ function draw() {
         scene.nearPlane, scene.farPlane);
     //mat4.ortho(projectionMatrix, -2.0, 2.0, -2.0, 2.0, scene.nearPlane, scene.farPlane);
 
-
     // enable the texture mapping
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, textures.textureObject0);
@@ -207,7 +206,6 @@ function draw() {
     gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
     mat3.normalFromMat4(normalMatrix, modelViewMatrix);
     gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
-    //drawingObjects.wiredCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId);
     drawingObjects.solidCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, ctx.aVertexTextureCoordId, textures.textureObject0);
     
     // translate and rotate objects
@@ -219,13 +217,13 @@ function draw() {
     drawingObjects.solidCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, ctx.aVertexTextureCoordId, textures.textureObject0);
 
     // draw sphere
-    //mat4.translate(modelViewMatrix, viewMatrix, [0.0, 0.0, -1.0]);
-    //mat4.rotate(modelViewMatrix, modelViewMatrix, scene.angle, [0, 1, 0]);
-    //mat4.scale(modelViewMatrix, modelViewMatrix, [0.5, 0.5, 0.5]);
-    //gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
-    //mat3.normalFromMat4(normalMatrix, modelViewMatrix);
-    //gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
-    //drawingObjects.solidSphere.drawWithColor(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, [1, 0, 0]);
+    mat4.translate(modelViewMatrix, viewMatrix, [0.0, 0.0, -1.0]);
+    mat4.rotate(modelViewMatrix, modelViewMatrix, scene.angle, [0, 1, 1]);
+    mat4.scale(modelViewMatrix, modelViewMatrix, [0.7, 0.7, 0.7]);
+    gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
+    mat3.normalFromMat4(normalMatrix, modelViewMatrix);
+    gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
+    drawingObjects.solidSphere.drawWithColor(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, [1, 0.8, 0]);
 }
 
 var first = true;
