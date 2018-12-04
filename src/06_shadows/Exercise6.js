@@ -40,7 +40,7 @@ var textures = {
 
 // parameters that define the scene
 var scene = {
-    eyePosition: [0, 2, 3],
+    eyePosition: [1, 1, 4],
     lookAtPosition: [0, 0, 0],
     upVector: [0, 1, 0],
     nearPlane: 0.1,
@@ -181,7 +181,6 @@ function draw() {
         glMatrix.toRadian(40),
         gl.drawingBufferWidth / gl.drawingBufferHeight,
         scene.nearPlane, scene.farPlane);
-    //mat4.ortho(projectionMatrix, -2.0, 2.0, -2.0, 2.0, scene.nearPlane, scene.farPlane);
 
     // enable the texture mapping
     gl.activeTexture(gl.TEXTURE0);
@@ -219,7 +218,7 @@ function draw() {
     // draw sphere
     mat4.translate(modelViewMatrix, viewMatrix, [0.0, 0.0, -2.0]);
     mat4.scale(modelViewMatrix, modelViewMatrix, [0.7, 0.7, 0.7]);
-    mat4.rotate(modelViewMatrix, modelViewMatrix, scene.angle, [0, 1, 1]);
+    mat4.rotate(modelViewMatrix, modelViewMatrix, scene.angle, [0, 1, 0]);
     mat3.normalFromMat4(normalMatrix, modelViewMatrix);
     gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
     gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);

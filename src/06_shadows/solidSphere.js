@@ -76,7 +76,7 @@ function SolidSphere(gl, latitudeBands, longitudeBands) {
         return indices;
     }
 
-    function drawWithColor(gl, aVertexPositionId, aVertexColorId, aVertexNormalId,  color) {
+    function drawWithColor(gl, aVertexPositionId, aVertexColorId, aVertexNormalId, color) {
         "use strict";
 
         // position
@@ -87,6 +87,7 @@ function SolidSphere(gl, latitudeBands, longitudeBands) {
         // color is directly specified as an attribute here, as it is valid for the whole object
         gl.disableVertexAttribArray(aVertexColorId);
         gl.vertexAttrib3f(aVertexColorId, color[0], color[1], color[2]);
+        gl.enableVertexAttribArray(aVertexColorId);
 
         // normal
         gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferNormals);
@@ -94,8 +95,8 @@ function SolidSphere(gl, latitudeBands, longitudeBands) {
         gl.enableVertexAttribArray(aVertexNormalId);
 
         // elements
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sphere.bufferIndices);
-        gl.drawElements(gl.TRIANGLES, this.numberOfTriangles*3 ,gl.UNSIGNED_SHORT, 0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferIndices);
+        gl.drawElements(gl.TRIANGLES, this.numberOfTriangles*3, gl.UNSIGNED_SHORT, 0);
     }
 
     var verticesAndTextures = defineVerticesAndTexture(latitudeBands, longitudeBands);
@@ -106,14 +107,13 @@ function SolidSphere(gl, latitudeBands, longitudeBands) {
     gl.bindBuffer(gl.ARRAY_BUFFER, sphere.bufferVertices);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesAndTextures.vertices), gl.STATIC_DRAW);
 
-
     sphere.bufferNormals = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, sphere.bufferNormals);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesAndTextures.normals), gl.STATIC_DRAW);
 
-    sphere.bufferTextures = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, sphere.bufferTextures);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesAndTextures.textures), gl.STATIC_DRAW);
+    //sphere.bufferTextures = gl.createBuffer();
+    //gl.bindBuffer(gl.ARRAY_BUFFER, sphere.bufferTextures);
+    //gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesAndTextures.textures), gl.STATIC_DRAW);
 
     sphere.bufferIndices = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sphere.bufferIndices);

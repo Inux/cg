@@ -45,7 +45,7 @@ function SolidCube(gl, backColor, frontColor, rightColor, leftColor, topColor, b
             -0.5, 0.5, 0.5,       // v17 = v7
             0.5, 0.5, 0.5,        // v18 = v6
             0.5, 0.5, -0.5,       // v19 = v2
-                                  //bottom
+                                  // bottom
             -0.5, -0.5, -0.5,     // v20 = v0
             -0.5, -0.5, 0.5,      // v21 = v4
             0.5, -0.5, 0.5,       // v22 = v5
@@ -170,15 +170,15 @@ function SolidCube(gl, backColor, frontColor, rightColor, leftColor, topColor, b
         bufferTextures: defineTexture(gl),
 
         draw: function (gl, aVertexPositionId, aVertexColorId, aVertexNormalId, aVertexTextureCoordId, textureObj) {
-            // ositionp
+            // position
             gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferVertices);
             gl.vertexAttribPointer(aVertexPositionId, 3, gl.FLOAT, false, 0, 0);
             gl.enableVertexAttribArray(aVertexPositionId);
 
             // color buffer
-            //gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferColors);
-            //gl.vertexAttribPointer(aVertexColorId, 3, gl.FLOAT, false, 0, 0);
-            //gl.enableVertexAttribArray(aVertexColorId);
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferColors);
+            gl.vertexAttribPointer(aVertexColorId, 3, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(aVertexColorId);
 
             // normal
             gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferNormals);
@@ -195,7 +195,6 @@ function SolidCube(gl, backColor, frontColor, rightColor, leftColor, topColor, b
             // bind the element array
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferSides);
             gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
-
         }
     }
 }
