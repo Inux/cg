@@ -68,8 +68,7 @@ function startup() {
     var canvas = document.getElementById("myCanvas");
     gl = createGLContext(canvas);
     initGL();
-    //loadTexture();
-    window.requestAnimationFrame (drawAnimated);
+    loadTexture();
 }
 
 /**
@@ -119,6 +118,7 @@ function loadTexture() {
     image.onload = function() {
         console.log("Image loaded");
         initTexture(image, textures.textureObject0);
+        window.requestAnimationFrame (drawAnimated);
     };
     // setting the src will trigger onload
     image.src = "lena512.png";
@@ -168,7 +168,7 @@ function draw() {
     var modelViewMatrix = mat4.create();
     var viewMatrix = mat4.create();
     var projectionMatrix = mat4.create();
-    //var textureMatrix = mat3.create();
+    var textureMatrix = mat3.create();
     var normalMatrix = mat3.create();
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -184,14 +184,14 @@ function draw() {
 
 
     // enable the texture mapping
-    //gl.activeTexture(gl.TEXTURE0);
-    //gl.bindTexture(gl.TEXTURE_2D, textures.textureObject0);
-    //gl.uniform1i(ctx.uSamplerId, 0);
-    //gl.uniformMatrix3fv(ctx.uTextureMatrixId, false, textureMatrix);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, textures.textureObject0);
+    gl.uniform1i(ctx.uSamplerId, 0);
+    gl.uniformMatrix3fv(ctx.uTextureMatrixId, false, textureMatrix);
 
     // tell the fragment shader to use the texture
-    //gl.uniform1i(ctx.uEnableTextureId, 1);
-    //gl.uniformMatrix3fv(ctx.uTextureMatrixId, false, textureMatrix);
+    gl.uniform1i(ctx.uEnableTextureId, 1);
+    gl.uniformMatrix3fv(ctx.uTextureMatrixId, false, textureMatrix);
 
     // set the light
     gl.uniform1i(ctx.uEnableLightingId, 1);
@@ -208,7 +208,7 @@ function draw() {
     mat3.normalFromMat4(normalMatrix, modelViewMatrix);
     gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
     //drawingObjects.wiredCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId);
-    drawingObjects.solidCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId);
+    drawingObjects.solidCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, ctx.aVertexTextureCoordId, textures.textureObject0);
     
     // translate and rotate objects
     mat4.translate(modelViewMatrix, viewMatrix, [-1.0, 0, 0]);
@@ -216,16 +216,16 @@ function draw() {
     gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
     mat3.normalFromMat4(normalMatrix, modelViewMatrix);
     gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
-    drawingObjects.solidCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId);
+    drawingObjects.solidCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, ctx.aVertexTextureCoordId, textures.textureObject0);
 
     // draw sphere
-    mat4.translate(modelViewMatrix, viewMatrix, [0.0, 0.0, -1.0]);
-    mat4.rotate(modelViewMatrix, modelViewMatrix, scene.angle, [0, 1, 0]);
-    mat4.scale(modelViewMatrix, modelViewMatrix, [0.5, 0.5, 0.5]);
-    gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
-    mat3.normalFromMat4(normalMatrix, modelViewMatrix);
-    gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
-    drawingObjects.solidSphere.drawWithColor(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, [1, 0, 0]);
+    //mat4.translate(modelViewMatrix, viewMatrix, [0.0, 0.0, -1.0]);
+    //mat4.rotate(modelViewMatrix, modelViewMatrix, scene.angle, [0, 1, 0]);
+    //mat4.scale(modelViewMatrix, modelViewMatrix, [0.5, 0.5, 0.5]);
+    //gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
+    //mat3.normalFromMat4(normalMatrix, modelViewMatrix);
+    //gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
+    //drawingObjects.solidSphere.drawWithColor(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, [1, 0, 0]);
 }
 
 var first = true;
