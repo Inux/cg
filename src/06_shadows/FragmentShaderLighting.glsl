@@ -14,8 +14,8 @@ varying vec2 vTextureCoord;
 uniform sampler2D uSampler;
 
 
-const float ambientFactor = 0.01;
-const float shininess = 10.0;
+const float ambientFactor = 0.3;
+const float shininess = 5.0;
 const vec3 specularMaterialColor = vec3(0.3, 0.3, 0.3);
 
 void main() {
@@ -41,7 +41,6 @@ void main() {
         // specular lighting
         vec3 specularColor = vec3(0, 0, 0);
         if (cosAngle > 0.0) {
-            //vec3 reflectionDir = normalize(2.0 + cosAngle) * normal - lightDirectionEye;
             vec3 reflectionDir =  normalize(reflect(-lightDirectionEye, normal));
             vec3 eyeDir = normalize(-1.0 * vVertexPositionEye3);
             float cosPhi = clamp(dot(reflectionDir, eyeDir), 0.0 , 1.0);
@@ -51,4 +50,5 @@ void main() {
         vec3 color = ambientColor + diffuseColor + specularColor;
         gl_FragColor = vec4(color, 1.0);
     }
+
 }

@@ -40,13 +40,13 @@ var textures = {
 
 // parameters that define the scene
 var scene = {
-    eyePosition: [0, 3, -4],
+    eyePosition: [0, 2, 3],
     lookAtPosition: [0, 0, 0],
     upVector: [0, 1, 0],
     nearPlane: 0.1,
     farPlane: 30.0,
     fov: 40,
-    lightPosition: [-20, 20, 0],
+    lightPosition: [0, -3, 0],
     lightColor: [1, 1, 1],
     rotateObjects: true,
     angle: 0,
@@ -69,6 +69,8 @@ function startup() {
     gl = createGLContext(canvas);
     initGL();
     loadTexture();
+
+    window.requestAnimationFrame (drawAnimated);
 }
 
 /**
@@ -118,7 +120,6 @@ function loadTexture() {
     image.onload = function() {
         console.log("Image loaded");
         initTexture(image, textures.textureObject0);
-        window.requestAnimationFrame (drawAnimated);
     };
     // setting the src will trigger onload
     image.src = "lena512.png";
@@ -186,7 +187,6 @@ function draw() {
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, textures.textureObject0);
     gl.uniform1i(ctx.uSamplerId, 0);
-    gl.uniformMatrix3fv(ctx.uTextureMatrixId, false, textureMatrix);
 
     // tell the fragment shader to use the texture
     gl.uniform1i(ctx.uEnableTextureId, 1);
@@ -217,12 +217,12 @@ function draw() {
     drawingObjects.solidCube.draw(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, ctx.aVertexTextureCoordId, textures.textureObject0);
 
     // draw sphere
-    mat4.translate(modelViewMatrix, viewMatrix, [0.0, 0.0, -1.0]);
-    mat4.rotate(modelViewMatrix, modelViewMatrix, scene.angle, [0, 1, 1]);
+    mat4.translate(modelViewMatrix, viewMatrix, [0.0, 0.0, -2.0]);
     mat4.scale(modelViewMatrix, modelViewMatrix, [0.7, 0.7, 0.7]);
-    gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
+    mat4.rotate(modelViewMatrix, modelViewMatrix, scene.angle, [0, 1, 1]);
     mat3.normalFromMat4(normalMatrix, modelViewMatrix);
     gl.uniformMatrix3fv(ctx.uNormalMatrixId, false, normalMatrix);
+    gl.uniformMatrix4fv(ctx.uModelViewMatrixId, false, modelViewMatrix);
     drawingObjects.solidSphere.drawWithColor(gl, ctx.aVertexPositionId, ctx.aVertexColorId, ctx.aVertexNormalId, [1, 0.8, 0]);
 }
 
