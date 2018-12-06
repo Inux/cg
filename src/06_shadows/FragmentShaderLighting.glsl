@@ -45,7 +45,7 @@ void main() {
             vec3 eyeDir = normalize(-1.0 * vVertexPositionEye3);
             float cosPhi = clamp(dot(reflectionDir, eyeDir), 0.0 , 1.0);
             cosPhi = pow(cosPhi, shininess);
-            specularColor = cosPhi * specularMaterialColor + uLightColor * cosPhi;
+            specularColor = cosPhi * specularMaterialColor * uLightColor * cosPhi;
         }
         vec3 color = ambientColor + diffuseColor + specularColor;
         gl_FragColor = vec4(color, 1.0);
